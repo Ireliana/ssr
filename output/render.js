@@ -13,6 +13,7 @@ createBundleRenderer(require("../dist/server/error/vue-ssr-server-bundle"), {
     inject: false,
 	clientManifest: require("../dist/server/error/vue-ssr-client-manifest.json")
 }).renderToString((err, html) => {
+    html = html.replace(`data-server-rendered="true" `, "");
 	fs.writeFileSync("../dist/error.html", html, "utf-8");
 });
 
