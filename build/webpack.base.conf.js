@@ -3,7 +3,6 @@ const path = require("path");
 const utils = require("./utils");
 const config = require("../config");
 const vueLoaderConfig = require("./vue-loader.conf");
-const env = require("../config/prod.env");
 
 function resolve(dir) {
 	return path.join(__dirname, "..", dir);
@@ -11,11 +10,7 @@ function resolve(dir) {
 
 module.exports = {
 	context: path.resolve(__dirname, "../"),
-	entry: {
-		// index: "./src/pages/Index/index.js",
-		// tech: "./src/pages/Tech/index.js",
-		// error: "./src/pages/Error/index.js"
-	},
+	entry: {},
 	output: {
 		path: config.build.assetsRoot,
 		filename: "[name].js",
@@ -28,10 +23,6 @@ module.exports = {
 		extensions: [".js", ".vue", ".json"],
 		alias: {
 			vue$: "vue/dist/vue.esm.js",
-			swiper$:
-				process.env.NODE_ENV === "production"
-					? "swiper/dist/js/swiper.min.js"
-					: "swiper/dist/js/swiper.js",
 			src: resolve("src")
 		}
 	},

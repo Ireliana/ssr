@@ -1,3 +1,4 @@
+process.env.NODE_ENV = "production";
 const merge = require("webpack-merge");
 const nodeExternals = require("webpack-node-externals");
 const baseConfig = require("./webpack.base.conf.js");
@@ -6,22 +7,22 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const webpack = require("webpack");
 const utils = require("./utils");
 const path = require("path");
-const entrys = ["error"];
 const env = require("../config/prod.env");
+const fs = require("fs");
+const entrys = fs.readdirSync(path.join(__dirname, "../src/pages"));
 
 module.exports = [
-	...entrys.map(pagename => {
-		let pageDirname = pagename[0].toUpperCase() + pagename.slice(1);
+	...entrys.map(page => {
 		return merge(baseConfig, {
 			// 将 entry 指向应用程序的 server entry 文件
-			entry: { [pagename]: `./src/pages/${pageDirname}/server.js` },
+			entry: { [page]: `./src/pages/${page}/server.js` },
 			// 这允许 webpack 以 Node 适用方式(Node-appropriate fashion)处理动态导入(dynamic import)，
 			// 并且还会在编译 Vue 组件时，
 			// 告知 `vue-loader` 输送面向服务器代码(server-oriented code)。
 			target: "node",
 
 			// 对 bundle renderer 提供 source map 支持
-			devtool: "none",
+			// devtool: "none",
 
 			// 此处告知 server bundle 使用 Node 风格导出模块(Node-style exports)
 			output: {
@@ -39,24 +40,24 @@ module.exports = [
 				whitelist: /\.(css|less)$/
 			}),
 
-			// 这是将服务器的整个输出
-			// 构建为单个 JSON 文件的插件。
-			// 默认文件名为 `vue-ssr-server-bundle.json`
-            plugins: [
+			plugins: [
 				new webpack.DefinePlugin({
 					"process.env": env
 				}),
+				// 这是将服务器的整个输出
+				// 构建为单个 JSON 文件的插件。
+				// 默认文件名为 `vue-ssr-server-bundle.json`
 				new VueSSRServerPlugin({
-					filename: `server/${pagename}/vue-ssr-server-bundle.json` //dist目录
-                }),
-                new ExtractTextPlugin({
-                    filename: utils.assetsPath("css/[name].[contenthash].css"),
-                    // Setting the following option to `false` will not extract CSS from codesplit chunks.
-                    // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-                    // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
-                    // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
-                    allChunks: true
-                })
+					filename: `../ssr/server/${page}/vue-ssr-server-bundle.json`
+				}),
+				new ExtractTextPlugin({
+					filename: utils.assetsPath("css/[name].[contenthash].css"),
+					// Setting the following option to `false` will not extract CSS from codesplit chunks.
+					// Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
+					// It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
+					// increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
+					allChunks: true
+				})
 			]
 		});
 	})

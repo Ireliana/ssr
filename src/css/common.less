@@ -1,0 +1,84 @@
+@import "reset.less";
+@import "_modules.less";
+
+html,
+body {
+	width: 100%;
+	background-size: 100% 100%;
+	background-attachment: fixed;
+}
+
+.k-flex {
+	.box();
+	.box-align(center);
+	.box-pack(center);
+}
+
+.k-flex-v {
+	.box-orient(vertical);
+}
+
+.k-flex-top {
+	.box-align(start);
+}
+
+.k-flex-bottom {
+	.box-align(end);
+}
+
+.k-flex-left {
+	.box-pack(start);
+}
+
+.k-flex-right {
+	.box-pack(end);
+}
+
+.k-flex-justify {
+	.box-pack(justify);
+}
+
+.k-flex-item {
+	.box-flex(1);
+}
+
+* {
+	-webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+// vue fade
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.15s;
+}
+
+.fade-enter,
+.fade-leave-active {
+	opacity: 0;
+}
+
+//过渡
+.eg {
+	transition: all 0.3s ease 0s;
+}
+
+//动画
+.fadeIn {
+	animation: fadeIn 0.3s ease 0s normal;
+}
+
+.fadeOut {
+	animation: fadeOut 0.3s ease 0s normal;
+}
+
+.btn-atv {
+	display: block;
+	transition: all 0.3s;
+	&:active {
+		transform: scale(0.9);
+	}
+}

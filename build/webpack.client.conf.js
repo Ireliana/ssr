@@ -1,3 +1,4 @@
+process.env.NODE_ENV = "production";
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const baseConfig = require("./webpack.base.conf.js");
@@ -6,15 +7,16 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const utils = require("./utils");
 const path = require("path");
-const entrys = ["error"];
 const env = require("../config/prod.env");
 const config = require("../config");
+const fs = require("fs");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const entrys = fs.readdirSync(path.join(__dirname, "../src/pages"));
 
 module.exports = [
-	...entrys.map(pagename => {
-		let pageDirname = pagename[0].toUpperCase() + pagename.slice(1);
+	...entrys.map(page => {
 		return merge(baseConfig, {
-			entry: { [pagename]: `./src/pages/${pageDirname}/index.js` },
+			entry: { [page]: `./src/pages/${page}/index.js` },
 			output: {
 				path: config.build.assetsRoot,
 				filename: utils.assetsPath("js/[name].[chunkhash].js"),
@@ -23,7 +25,19 @@ module.exports = [
 			plugins: [
 				new webpack.DefinePlugin({
 					"process.env": env
-                }),
+				}),
+				new UglifyJsPlugin({
+					uglifyOptions: {
+						compress: {
+							warnings: false
+						},
+						output: {
+							comments: false
+						}
+					},
+					sourceMap: false,
+					parallel: true
+				}),
 				new webpack.optimize.CommonsChunkPlugin({
 					name: "vendor",
 					minChunks(module) {
@@ -64,7 +78,7 @@ module.exports = [
 				// 此插件在输出目录中
 				// 生成 `vue-ssr-client-manifest.json`。
 				new VueSSRClientPlugin({
-					filename: `server/${pagename}/vue-ssr-client-manifest.json` //dist目录
+					filename: `../ssr/server/${page}/vue-ssr-client-manifest.json`
 				})
 			]
 		});
