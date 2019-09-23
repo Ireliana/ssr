@@ -6,13 +6,14 @@
 				:src="require('src/assets/header/icon-logo.png')"
 			/>
 			<div class="game-info">
-				<h2>时空之塔</h2>
+				<h2>xxxx</h2>
 				<p>次元集结回合手游</p>
 			</div>
 		</div>
 		<a href="javascript:;" class="btn-atv btn-dl" />
 	</header>
 </template>
+<script src="./main.js"></script>
 <script>
 	export default {};
 </script>
